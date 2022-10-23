@@ -21,6 +21,7 @@ CPlayOmokDlg::CPlayOmokDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_PLAYOMOK_DIALOG, pParent), m_grid_pen(PS_SOLID, 1, RGB(144, 90, 40))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	memset(m_dol, 0, sizeof(m_dol));
 }
 
 void CPlayOmokDlg::DoDataExchange(CDataExchange* pDX)
@@ -107,23 +108,24 @@ void CPlayOmokDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	int x = point.x / G_LEN;
 	int y = point.y / G_LEN;
 
-	if (x < X_COUNT && y < Y_COUNT)
+	if (x < X_COUNT && y < Y_COUNT && m_dol[y][x] == 0)
 	{
+		m_dol[y][x] = m_step + 1;
 		CClientDC dc(this);
 
-		CGdiObject *p_old_brush;
+		CGdiObject* p_old_brush;
 		CPen* p_old_pen = dc.SelectObject(&m_grid_pen);
 
 		if (m_step == 0) p_old_brush = dc.SelectStockObject(BLACK_BRUSH);
-		else p_old_brush=dc.SelectStockObject(WHITE_BRUSH);
+		else p_old_brush = dc.SelectStockObject(WHITE_BRUSH);
 
 		dc.Ellipse(x * G_LEN, y * G_LEN,
 			G_LEN + x * G_LEN, G_LEN + y * G_LEN);
 
 		dc.SelectObject(p_old_brush);
 		dc.SelectObject(p_old_pen);
-		m_step = !m_step;
+		m_step = !m_step;	
 	}
-
+	
 	CDialogEx::OnLButtonDown(nFlags, point);
 }
