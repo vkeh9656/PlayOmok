@@ -76,6 +76,7 @@ void CPlayOmokDlg::OnPaint()
 	}
 	else
 	{
+		CBrush* p_old_brush = dc.GetCurrentBrush();
 		CPen* p_old_pen = dc.SelectObject(&m_grid_pen);
 
 		for (int i = 0; i < X_COUNT; i++)
@@ -89,6 +90,20 @@ void CPlayOmokDlg::OnPaint()
 			dc.LineTo(G_LEN_H + (X_COUNT-1) * G_LEN, G_LEN_H + i * G_LEN);
 		}
 
+		for (int y = 0; y < Y_COUNT; y++)
+		{
+			for (int x = 0; x < X_COUNT; x++)
+			{
+				if (m_dol[y][x]) // 돌이 놓여져 있는 경우
+				{
+					if (m_dol[y][x] == 1) dc.SelectStockObject(BLACK_BRUSH);
+					else dc.SelectStockObject(WHITE_BRUSH);
+
+					dc.Ellipse(x * G_LEN, y * G_LEN, G_LEN + x * G_LEN, G_LEN + y * G_LEN);
+				}
+			}
+		}
+		dc.SelectObject(p_old_brush);
 		dc.SelectObject(p_old_pen);
 	}
 	//CDialogEx::OnPaint();
