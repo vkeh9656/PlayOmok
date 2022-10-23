@@ -18,7 +18,7 @@
 
 
 CPlayOmokDlg::CPlayOmokDlg(CWnd* pParent /*=nullptr*/)
-	: CDialogEx(IDD_PLAYOMOK_DIALOG, pParent)
+	: CDialogEx(IDD_PLAYOMOK_DIALOG, pParent), m_grid_pen(PS_SOLID, 1, RGB(144, 90, 40))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -31,6 +31,7 @@ void CPlayOmokDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CPlayOmokDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 
@@ -45,7 +46,7 @@ BOOL CPlayOmokDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
-	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	SetBackgroundColor(RGB(244, 166, 74));
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -74,8 +75,22 @@ void CPlayOmokDlg::OnPaint()
 	}
 	else
 	{
-		//CDialogEx::OnPaint();
+		CPen* p_old_pen = dc.SelectObject(&m_grid_pen);
+
+		for (int i = 0; i < X_COUNT; i++)
+		{
+			// 수직선
+			dc.MoveTo(G_LEN_H + i * G_LEN, G_LEN_H);
+			dc.LineTo(G_LEN_H + i * G_LEN, G_LEN_H + (Y_COUNT-1) * G_LEN);
+
+			// 수평선
+			dc.MoveTo(G_LEN_H, G_LEN_H + i * G_LEN);
+			dc.LineTo(G_LEN_H + (X_COUNT-1) * G_LEN, G_LEN_H + i * G_LEN);
+		}
+
+		dc.SelectObject(p_old_pen);
 	}
+	//CDialogEx::OnPaint();
 }
 
 // 사용자가 최소화된 창을 끄는 동안에 커서가 표시되도록 시스템에서
@@ -85,3 +100,17 @@ HCURSOR CPlayOmokDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void CPlayOmokDlg::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	int x = point.x / G_LEN;
+	int y = point.y / G_LEN;
+
+	CClientDC dc(this);
+
+	dc.Ellipse(x * G_LEN, y* G_LEN, 
+		G_LEN +x* G_LEN, G_LEN +y* G_LEN);
+
+	CDialogEx::OnLButtonDown(nFlags, point);
+}

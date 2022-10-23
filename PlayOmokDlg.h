@@ -4,10 +4,17 @@
 
 #pragma once
 
+#define X_COUNT			19
+#define Y_COUNT			19
+#define G_LEN			30	// GRID LENGTH
+#define G_LEN_H			15	// GRID LENGTH HALF
 
 // CPlayOmokDlg 대화 상자
 class CPlayOmokDlg : public CDialogEx
 {
+private:
+	CPen m_grid_pen;
+
 // 생성입니다.
 public:
 	CPlayOmokDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
@@ -30,4 +37,6 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 };
