@@ -107,10 +107,23 @@ void CPlayOmokDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	int x = point.x / G_LEN;
 	int y = point.y / G_LEN;
 
-	CClientDC dc(this);
+	if (x < X_COUNT && y < Y_COUNT)
+	{
+		CClientDC dc(this);
 
-	dc.Ellipse(x * G_LEN, y* G_LEN, 
-		G_LEN +x* G_LEN, G_LEN +y* G_LEN);
+		CGdiObject *p_old_brush;
+		CPen* p_old_pen = dc.SelectObject(&m_grid_pen);
+
+		if (m_step == 0) p_old_brush = dc.SelectStockObject(BLACK_BRUSH);
+		else p_old_brush=dc.SelectStockObject(WHITE_BRUSH);
+
+		dc.Ellipse(x * G_LEN, y * G_LEN,
+			G_LEN + x * G_LEN, G_LEN + y * G_LEN);
+
+		dc.SelectObject(p_old_brush);
+		dc.SelectObject(p_old_pen);
+		m_step = !m_step;
+	}
 
 	CDialogEx::OnLButtonDown(nFlags, point);
 }

@@ -14,6 +14,7 @@ class CPlayOmokDlg : public CDialogEx
 {
 private:
 	CPen m_grid_pen;
+	char m_step = 0; // 0 -> 흑돌 차례, 1-> 백돌 차례
 
 // 생성입니다.
 public:
